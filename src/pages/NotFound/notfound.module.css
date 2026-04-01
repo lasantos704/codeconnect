@@ -1,0 +1,26 @@
+.card {
+  max-width: 90%;
+  background-color: var(--dark-gray);
+  border-radius: 32px;
+  padding: 56px 78px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 24px;
+}
+
+.title {
+  margin: 0;
+  padding: 0;
+  color: var(--offwhite);
+  font-size: 64px;
+  line-height: 100%;
+}
+
+.card p {
+  margin: 0;
+  padding: 0;
+  color: var(--offwhite);
+  font-size: 24px;
+}

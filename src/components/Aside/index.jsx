@@ -8,8 +8,11 @@ import { Button } from "../Button";
 import { Link } from "../Link";
 
 import styles from "./aside.module.css";
+import { useAuth } from "../../hooks/useAuth";
 
 export const Aside = () => {
+  const { isAuthenticated } = useAuth();
+
   return (
     <aside className={styles.aside}>
       <nav>
@@ -42,18 +45,22 @@ export const Aside = () => {
               Sobre nós
             </AsideLink>
           </li>
-          <li>
-            <AsideLink href="/auth/login">
-              <IconLogin />
-              Login
-            </AsideLink>
-          </li>
-          <li>
-            <AsideLink href="/auth/logout">
-              <IconLogin />
-              Logout
-            </AsideLink>
-          </li>
+          {!isAuthenticated && (
+            <li>
+              <AsideLink href="/auth/login">
+                <IconLogin />
+                Login
+              </AsideLink>
+            </li>
+          )}
+          {isAuthenticated && (
+            <li>
+              <AsideLink href="/auth/logout">
+                <IconLogin />
+                Logout
+              </AsideLink>
+            </li>
+          )}
         </ul>
       </nav>
     </aside>
