@@ -1,5 +1,5 @@
 .subheading {
-  color: #81fe88;
-  font-size: 31px;
+  color: #81fe88 !important;
+  font-size: 31px !important;
   line-height: 120%;
 }

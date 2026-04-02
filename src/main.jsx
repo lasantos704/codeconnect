@@ -6,5 +6,5 @@ import { AppRouter } from "./router/index.jsx";
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <AppRouter />
-  </StrictMode>,
+  </StrictMode>
 );
