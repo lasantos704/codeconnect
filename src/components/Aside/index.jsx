@@ -22,45 +22,39 @@ export const Aside = () => {
               <img src={logo} alt="Logo da Code Connect" />
             </Link>
           </li>
-          <li>
-            <Button href="#" outline>
-              Publicar
-            </Button>
-          </li>
-          <li>
-            <AsideLink href="/">
-              <IconFeed />
-              Feed
-            </AsideLink>
-          </li>
-          <li>
-            <AsideLink href="#">
-              <IconAccount />
-              Perfil
-            </AsideLink>
-          </li>
+          {isAuthenticated && (
+            <>
+              <li>
+                <Button href="#" outline>
+                  Publicar
+                </Button>
+              </li>
+              <li>
+                <AsideLink href="/">
+                  <IconFeed />
+                  Feed
+                </AsideLink>
+              </li>
+              <li>
+                <AsideLink href="#">
+                  <IconAccount />
+                  Perfil
+                </AsideLink>
+              </li>
+            </>
+          )}
           <li>
             <AsideLink href="#">
               <IconInfo />
               Sobre nós
             </AsideLink>
           </li>
-          {!isAuthenticated && (
-            <li>
-              <AsideLink href="/auth/login">
-                <IconLogin />
-                Login
-              </AsideLink>
-            </li>
-          )}
-          {isAuthenticated && (
-            <li>
-              <AsideLink href="/auth/logout">
-                <IconLogin />
-                Logout
-              </AsideLink>
-            </li>
-          )}
+          <li>
+            <AsideLink href={isAuthenticated ? "/auth/logout" : "/auth/login"}>
+              <IconLogin />
+              {isAuthenticated ? "Logout" : "Login"}
+            </AsideLink>
+          </li>
         </ul>
       </nav>
     </aside>
