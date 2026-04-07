@@ -8,14 +8,15 @@ import { Link } from "react-router";
 
 export const CardPost = ({ post }) => {
   const [likes, setLikes] = useState(post.likes);
+
   const handleLikeButton = () => {
-    fetch(`http://localhost:3000/blog-posts/${post.id}/like`).then(
-      (response) => {
-        if (response.ok) {
-          setLikes((oldState) => oldState + 1);
-        }
+    fetch(`http://localhost:3000/blog-posts/${post.id}/like`, {
+      method: "POST",
+    }).then((response) => {
+      if (response.ok) {
+        setLikes((oldState) => oldState + 1);
       }
-    );
+    });
   };
 
   return (

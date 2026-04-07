@@ -3,12 +3,14 @@ import styles from "./feed.module.css";
 import { useEffect, useState } from "react";
 
 export const Feed = () => {
-  const [posts, setPosts] = useState();
+  const [posts, setPosts] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:3000/blog-post")
+    fetch("http://localhost:3000/blog-posts")
       .then((response) => response.json())
-      .then((data) => setPosts(data));
+      .then((data) => {
+        setPosts(data);
+      });
   }, []);
 
   return (
