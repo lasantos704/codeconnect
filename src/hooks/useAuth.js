@@ -1,13 +1,5 @@
 import { useState, useEffect } from "react";
 
-const createUser = (name, email, password) => ({
-  id: Date.now().toString(),
-  name,
-  email,
-  password,
-  createdAt: new Date().toISOString(),
-});
-
 export const useAuth = () => {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -25,49 +17,47 @@ export const useAuth = () => {
     setIsLoading(false);
   }, []);
 
-  const register = (name, email, password) => {
+  const register = async (name, email, password) => {
     try {
-      const existingUsers = JSON.parse(
-        localStorage.getItem("auth_users") || "[]",
-      );
-      console.log('email:', email);
-      console.log("Existing users:", existingUsers);
-      const userExists = existingUsers.find((u) => u.email === email);
-      console.log("User exists:", userExists);
+      const response = await fetch("http://localhost:3000/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name, email, password }),
+      });
 
-      if (userExists) {
-        throw new Error("Usuário já existe com este email");
+      if (!response.ok) {
+        throw new Error("HTTP error: ", response.status);
       }
 
-      const newUser = createUser(name, email, password);
-
-      existingUsers.push(newUser);
-      localStorage.setItem("auth_users", JSON.stringify(existingUsers));
-
-      setUser(newUser);
-      localStorage.setItem("auth_user", JSON.stringify(newUser));
-
-      return { success: true, user: newUser };
+      return { success: true };
     } catch (error) {
       return { success: false, error: error.message };
     }
   };
 
-  const login = (email, password) => {
+  const login = async (email, password) => {
     try {
-      const users = JSON.parse(localStorage.getItem("auth_users") || "[]");
-      const user = users.find(
-        (u) => u.email === email && u.password === password,
-      );
+      const response = await fetch("http://localhost:3000/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
 
-      if (!user) {
-        throw new Error("Email ou senha incorretos");
+      if (!response.ok) {
+        throw new Error("HTTP error: ", response.status);
       }
 
-      setUser(user);
-      localStorage.setItem("auth_user", JSON.stringify(user));
+      const data = await response.json();
 
-      return { success: true, user };
+      setUser(data.user);
+      localStorage.setItem("auth_user", JSON.stringify(data.user));
+      localStorage.setItem("jwt", data.access_token);
+
+      return { success: true };
     } catch (error) {
       return { success: false, error: error.message };
     }
@@ -76,6 +66,7 @@ export const useAuth = () => {
   const logout = () => {
     setUser(null);
     localStorage.removeItem("auth_user");
+    localStorage.removeItem("jwt");
   };
 
   const isAuthenticated = !!user;
