@@ -5,23 +5,34 @@ import styles from "./cardpost.module.css";
 
 import { ThumbsUpButton } from "./ThumbsUpButton";
 import { Link } from "react-router";
+import { http } from "../../api";
+import { useAuth } from "../../hooks/useAuth";
 
 export const CardPost = ({ post }) => {
   const [likes, setLikes] = useState(post.likes);
-  const token = localStorage.getItem("jwt").split("\"")[1];
+  const [comments, setComments] = useState(post.comments);
 
+  const { isAuthenticated } = useAuth();
+
+  const handleNewComment = (comment) => {
+    setComments((oldState) => [...oldState, comment]);
+  };
 
   const handleLikeButton = () => {
-    fetch(`http://localhost:3000/blog-posts/${post.id}/like`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }).then((response) => {
-      if (response.ok) {
+    const token = localStorage.getItem("jwt").split('"')[1];
+    http
+      .post(
+        `blog-posts/${post.id}/like`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      )
+      .then(() => {
         setLikes((oldState) => oldState + 1);
-      }
-    });
+      });
   };
 
   return (
@@ -39,12 +50,16 @@ export const CardPost = ({ post }) => {
       <footer className={styles.footer}>
         <div className={styles.actions}>
           <div className={styles.action}>
-            <ThumbsUpButton loading={false} onClick={handleLikeButton} />
+            <ThumbsUpButton
+              loading={false}
+              onClick={handleLikeButton}
+              disabled={!isAuthenticated}
+            />
             <p>{likes}</p>
           </div>
           <div className={styles.action}>
-            <ModalComment />
-            <p>{post.comments.length}</p>
+            <ModalComment onSuccess={handleNewComment} postId={post.id} />
+            <p>{comments.length}</p>
           </div>
         </div>
         <Author author={post.author} />
